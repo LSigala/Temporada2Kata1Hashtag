@@ -1,95 +1,61 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+import 'bootstrap/dist/css/bootstrap.css';
 
-export default function Home() {
+export default function Form1() {
+
+    async function Hashtag(e: any){
+        e.preventDefault();
+    
+        const data = {
+          HashtagString: (e.target.hashtagString.value)
+        }
+        
+
+        const dataSeparated = data.HashtagString.split("");
+        let validate = "";
+        const nonAlphabetical = [1, "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+        
+        if (dataSeparated[0] != "#") {
+          validate = "Invalid";
+          alert("The tag is invalid, please enter the tag with # at first");
+        }else{
+          for (let i = 0; i < dataSeparated.length; i++) {
+            const currentSymbol = dataSeparated[i];
+            const nextSymbol = dataSeparated[i + 1];
+            if (currentSymbol != "#" && nextSymbol == "#") {
+              alert("The tag is invalid");
+              validate = "Invalid";
+              break;
+            }
+            
+            for(let item of nonAlphabetical){
+              if(currentSymbol != "#" && nextSymbol == item || currentSymbol == "#" && nextSymbol == item){
+                validate = "Invalid";
+                alert("The tag is invalid");
+                break;
+              }
+            }
+          }
+        }
+        
+        if (validate == "") {
+          const noDuplicated = dataSeparated.filter((item:any, index = "#") => dataSeparated.indexOf(item) === index);
+          const noHashtag = noDuplicated.slice(1).join("")
+          alert(noHashtag);
+        }
+      }
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+      <form onSubmit={Hashtag} className="container col-6 text-center mt-4 bg-light">
+        <div className="pb-2">
+            <div className="form-group mt-5 p-3 d-flex">
+                <div className="form-group mb-3 col-5 mx-auto">
+                    <label>Enter Tag</label>
+                    <input type="text" className="form-control" id="hashtagString" required aria-describedby="emailHelp " />
+                </div>
+            </div>
+            <button type="submit" className="btn btn-primary mt-3 mb-3 mx-auto d-block">Send Tag</button>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    </form>
   );
 }
